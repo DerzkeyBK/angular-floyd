@@ -1,0 +1,41 @@
+*{
+    font-family: Noto;
+    color: #f9f5f5;
+}
+
+.app{
+    background: rgb(13,16,22);
+background: linear-gradient(142deg, rgba(13,16,22,1) 0%, rgba(4,4,64,1) 50%, rgba(8,2,31,1) 100%);
+}
+
+#canvas{
+    border: solid;
+    width: 750px;
+    height: 750px;
+    border-radius: 10%;
+}
+
+button{
+    width: 120px;
+    height: 40px;
+    background: #1a1f38;
+    color: #f9f5f5;
+    border: none;
+    border-radius: 5px;
+
+}
+input{
+    background: #394479;
+    border: none;
+    border-radius: 5px;
+    padding-left: 10px;
+    height: 25px;
+    width: auto;
+}
+
+select{
+    background: #394479;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+}

@@ -1,0 +1,67 @@
+<div class="app">
+  <div class="header">
+    <div style="display: inline-block;">
+      <div style="text-align: center;">
+        Добавить узел
+      </div>
+      <input style="position: relative;top: 25px;" type="text" placeholder="Имя узла" [(ngModel)]="nodeName">
+      <button style="position: relative; top: 25px; margin-left: 15px;" (click)="addNode()">Добавить</button>
+    
+      <div style="margin-top: 20px;margin-bottom: 20px;">Узлы</div>
+      <div style="display: inline-block;" *ngFor="let item of graph.nodes | keyvalue">
+       [{{item.key}}] 
+      </div>
+    </div>
+    
+    <div style="display: inline-block; position: absolute;margin-left: 50px;">
+      <div style="display: block;text-align: center;">
+        Добавить грань
+      </div>
+      <div style="display: inline-block;">
+        <div>Родительский узел</div>
+        <select [(ngModel)]="edgeParent">
+          <option value="">
+            Выберите родительский узел
+          </option>
+          <option *ngFor="let item of graph.nodes | keyvalue" value="{{item.value.id}}">
+            {{item.key}}
+          </option>
+        </select>
+      </div>
+    
+      <div style="display: inline-block; margin-left: 20px;">
+        <div style="position: relative;top: 15px;">Дочерний узел</div>
+        <select [(ngModel)]="edgeChild" >
+          <option value="">
+            Выберите дочерний узел
+          </option>
+          <option *ngFor="let item of graph.nodes | keyvalue" value="{{item.value.id}}">
+            {{item.key}}
+          </option>
+        </select>
+        <div style="display: inline-block; margin-left: 20px;">
+          <div>Цена ребра</div>
+          <input [(ngModel)]="edgeValue" type="number">
+        </div>
+      
+        <button style="display: inline-block; margin-left: 20px;" (click)="addEdge()">Добавить</button>
+      </div>
+  </div>
+  
+  <div class="Body">
+  
+  <div style="display: inline-block;">
+    <button style="display: inline-block; margin-left: 20px;position: relative; left: 42%;" (click)="plotGraph()">Показать граф</button>
+    <div id="canvas"></div>
+  </div>
+  
+  <div style="display: inline-block;position: relative;bottom: 350px;left: 20px;">
+    Пути для точек
+    <div *ngFor="let item of resultArray">
+      {{item}}
+    </div>
+  </div>
+  
+  </div>  
+    
+</div>

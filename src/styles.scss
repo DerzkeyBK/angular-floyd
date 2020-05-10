@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: Noto;
+    src: url(assets/NotoSans-Regular.ttf) format("opentype");
+  }
+  body{
+    background: rgb(13,16,22);
+background: linear-gradient(142deg, rgba(13,16,22,1) 0%, rgba(4,4,64,1) 50%, rgba(8,2,31,1) 100%);
+}
