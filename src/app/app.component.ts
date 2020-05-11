@@ -83,7 +83,10 @@ export class AppComponent {
     if(this.resultArray.length!=0){
       this.resultArray=[];
     }
-
+    if(this.done){
+      this.done
+      return;
+    }
     this.resultingPaths= this.floyd_warshall();
     let keys=Object.keys(this.resultingPaths);
     for(let item of Object.keys(this.resultingPaths)){
@@ -98,16 +101,10 @@ export class AppComponent {
       }
       this.resultArray.push(newString);
     }
-    debugger;
-    if(!this.done){
       const layout2 = new Layout(this.graph);
       const renderer2= new Renderer('#canvas', this.graph, 750, 750);
       renderer2.draw();
       this.done=true
-    }
-    else{
-      alert("К сожалению даже силой двух человек мы не смогли поднять проект до конца. Либа слишком тяжелая,хоть и отличная. Сайт сырой,но задачу выполняет");
-    }
 
   }
 
