@@ -84,7 +84,7 @@ export class AppComponent {
       this.resultArray=[];
     }
     if(this.done){
-      this.done
+      alert("Перерисовывать график мы её ещё не научили");
       return;
     }
     this.resultingPaths= this.floyd_warshall();
