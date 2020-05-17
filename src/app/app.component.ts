@@ -15,85 +15,58 @@ export class AppComponent {
 
   public graph:dracula.Graph;
   public count:any;
-  public nodeName:string;
-  public nodeOptions:any=[];
-  public config:any;
-  public edgeParent:any;
-  public edgeChild:any;
-  public edgeValue:number;
   public bestPath:any={};
   public startPoint:any;
   public resultingPaths:any[];
   public done:boolean;
   public resultArray:string[];
-  constructor(){
-    this.graph=new Graph();  
-    this.nodeName="";
-    this.edgeChild="";
-    this.edgeParent="";
-    this.startPoint="";
-    this.edgeValue=0;
+  public nodesNumber:number;
+  public nodes:any=[];
+
+
+  constructor(){  
+    this.graph=new Graph();    
     this.bestPath="";
-    this.nodeOptions=[];
-    this.config = {
-      labelField: 'label',
-      valueField: 'value',
-      searchField: 'label',
-      highlight: false,
-      create:false,
-      persist:true,
-      //plugins: ['dropdown_direction', 'remove_button'],
-      dropdownDirection: 'down',
-      maxItems: 1
-    };
     this.resultArray=[];
-
+    this.nodes=[];
+    this.nodesNumber=3;
+    this.newMatrix();
   }
-  public addNode(){
-    if(this.nodeName==""){
-      alert("Имя узла не может быть пустым");
-      return;
-    }
-    this.graph.addNode(this.nodeName);
-    this.nodeOptions.push(this.nodeName)
-    this.nodeName="";
-  }
-  
-  public addEdge(){
-    if(this.edgeChild=="" ||this.edgeParent==""){
-      alert("Заполните все поля");
-      return;
-    }
-    if(this.edgeChild==this.edgeParent){
-      alert("Родительский и дочерний узлы не могут совпадать");
-      return;
-    }
 
-    this.graph.addEdge(this.edgeParent,this.edgeChild,this.edgeValue,{
-      directed: true, // ориентированное ребро
-      stroke: "#fff", fill: "#5a5", // цвета ребра
-      label: this.edgeValue.toString()} ); // надпись над ребром
-    this.edgeChild="";
-    this.edgeParent="";
-    this.edgeValue=0;
-    this.done=false;
+  public newMatrix(){
+    this.nodes=[]
+    for(let i=0;i<this.nodesNumber;i++){
+      let line=[]
+      for(let j=0;j<this.nodesNumber;j++){
+        let node=0;
+        line.push(node);
+      }
+      this.nodes.push(line);
+    }
   }
 
   public plotGraph(){
-    if(this.resultArray.length!=0){
-      this.resultArray=[];
+    this.resultArray=[];
+    let g=new Graph();
+
+    for(let i=0;i<this.nodesNumber;i++){
+      for(let j=0;j<this.nodesNumber;j++){
+        if(i==j || !this.nodes[i][j]){
+          continue;
+        }
+        g.addEdge(i.toString(),j.toString(),this.nodes[i][j],{
+          directed: true,
+          label: this.nodes[i][j].toString()})
+      }
     }
-    if(this.done){
-      alert("Перерисовывать график мы её ещё не научили");
-      return;
-    }
-    this.resultingPaths= this.floyd_warshall();
+    this.resultingPaths= this.floyd_warshall(g);
     let keys=Object.keys(this.resultingPaths);
     for(let item of Object.keys(this.resultingPaths)){
       let newString="["+item+"]"+"--->";
       let i=0;
       for(let value of Object.values(this.resultingPaths[item])){
         if(value==0 || value==Infinity){
+          i++;
           continue;
         }
         newString+=" ["+keys[i]+"] : "+value;
@@ -101,14 +74,33 @@ export class AppComponent {
       }
       this.resultArray.push(newString);
     }
-      const layout2 = new Layout(this.graph);
-      const renderer2= new Renderer('#canvas', this.graph, 750, 750);
-      renderer2.draw();
-      this.done=true
+    let nodes=[];
+    for(let i=0;i<this.nodesNumber;i++){
+      nodes.push(i.toString());
+    }
+    for(let name of nodes){
+      let check=false;
+      for(let item in g.nodes){
+        debugger;        
+        if(name==g.nodes[item].id){
+          check=true;
+        }
+      }
+      if(!check){
+        g.addNode(name);
+      }
+    }
 
+      var layout2 = new Layout(g);
+      layout2.layout();
+      var renderer2= new Renderer('#canvas',g, 750, 750);
+      renderer2.draw();
+      this.done=true;
   }
 
-  floyd_warshall() {
+
+
+  floyd_warshall(g) {
     var path = [];
     var next = [];
     var i = void 0,
@@ -116,19 +108,19 @@ export class AppComponent {
         k = void 0,
         e = void 0;
 
-    for (j in this.graph.nodes) {
+    for (j in g.nodes) {
       path[j] = [];
       next[j] = [];
-      for (i in this.graph.nodes) {
+      for (i in g.nodes) {
         path[j][i] = j === i ? 0 : Infinity;
       }
     }
-    for (e in this.graph.edges) {
-      path[this.graph.edges[e].source.id][this.graph.edges[e].target.id] = this.graph.edges[e].weight;
+    for (e in g.edges) {
+      path[g.edges[e].source.id][g.edges[e].target.id] = g.edges[e].weight;
     } 
-    for (i in this.graph.nodes) {
-      for (j in this.graph.nodes) {
-        for (k in this.graph.nodes) {
+    for (i in g.nodes) {
+      for (j in g.nodes) {
+        for (k in g.nodes) {
           if (path[i][j] > path[i][k] + path[k][j]) {
             path[i][j] = path[i][k] + path[k][j];
   
