@@ -29,7 +29,7 @@ export class AppComponent {
     this.bestPath="";
     this.resultArray=[];
     this.nodes=[];
-    this.nodesNumber=3;
+    this.nodesNumber=0;
     this.newMatrix();
   }
 
@@ -38,7 +38,7 @@ export class AppComponent {
     for(let i=0;i<this.nodesNumber;i++){
       let line=[]
       for(let j=0;j<this.nodesNumber;j++){
-        let node=0;
+        let node=undefined;
         line.push(node);
       }
       this.nodes.push(line);
@@ -59,29 +59,14 @@ export class AppComponent {
           label: this.nodes[i][j].toString()})
       }
     }
-    this.resultingPaths= this.floyd_warshall(g);
-    let keys=Object.keys(this.resultingPaths);
-    for(let item of Object.keys(this.resultingPaths)){
-      let newString="["+item+"]"+"--->";
-      let i=0;
-      for(let value of Object.values(this.resultingPaths[item])){
-        if(value==0 || value==Infinity){
-          i++;
-          continue;
-        }
-        newString+=" ["+keys[i]+"] : "+value;
-        i++;
-      }
-      this.resultArray.push(newString);
-    }
+
     let nodes=[];
     for(let i=0;i<this.nodesNumber;i++){
       nodes.push(i.toString());
     }
     for(let name of nodes){
       let check=false;
-      for(let item in g.nodes){
-        debugger;        
+      for(let item in g.nodes){      
         if(name==g.nodes[item].id){
           check=true;
         }
@@ -90,6 +75,24 @@ export class AppComponent {
         g.addNode(name);
       }
     }
+
+    this.resultingPaths= this.floyd_warshall(g);
+    let keys=Object.keys(this.resultingPaths);
+    for(let item of Object.keys(this.resultingPaths)){
+      let newString="["+item+"]"+"--->";
+      let i=0;
+      for(let value of Object.values(this.resultingPaths[item])){
+        if(value==Infinity){
+          newString+=" ["+keys[i]+"] : НД"; 
+        }
+        else{
+          newString+=" ["+keys[i]+"] : "+value;
+        }
+        i++;
+      }
+      this.resultArray.push(newString);
+    }
+    
 
       var layout2 = new Layout(g);
       layout2.layout();
